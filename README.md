@@ -1,5 +1,6 @@
 # **Finding Lane Lines on the Road** 
 
+[//]: # (Image References)
 [image1]: ./test_images_output/solidWhiteCurve.jpg "Lane Lines"
 
 For Finding Lane Lines on the Road, I used OpenCV and Python
@@ -13,15 +14,23 @@ The goals / steps of this project are the following:
 4. Region of Interest Detection
 5. Hough Transformation for Line Detection
 
-Using the pipeline we can find the lane lines on both individual images and video clip.
+Using the pipeline I can find the lane lines on both individual images and video clip.
 
 [//]: # (Image References)
 
-[image1]: ./examples/grayscale.jpg "Grayscale"
+[image2]: ./examples/grayscale.jpg "Grayscale"
 
 ---
 
 ### Reflection
+
+# Example Test Image
+
+[//]: # (Image References)
+
+[image3]: ./test_images/solidWhiteCurve.jpg "Test Image"
+
+Above Image is an example of a lane image which has white lane is a series of alternating dots and short lines, which we need to detect as one line.
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
