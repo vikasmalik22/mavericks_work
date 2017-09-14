@@ -1,7 +1,6 @@
 # **Finding Lane Lines on the Road** 
 
-[//]: # (Image References)
-[image1]: ./test_images_output/solidWhiteCurve.jpg "Lane Lines"
+<img src="test_images_output/solidWhiteCurve.jpg" alt="Combined Image" />
 
 For Finding Lane Lines on the Road, I used OpenCV and Python
 
@@ -16,19 +15,13 @@ The goals / steps of this project are the following:
 
 Using the pipeline I can find the lane lines on both individual images and video clip.
 
-[//]: # (Image References)
-
-[image2]: ./examples/grayscale.jpg "Grayscale"
-
 ---
 
 ### Reflection
 
 # Example Test Image
 
-[//]: # (Image References)
-
-[image3]: ./test_images/solidWhiteCurve.jpg "Test Image"
+<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
 
 Above Image is an example of a lane image which has white lane is a series of alternating dots and short lines, which we need to detect as one line.
 
