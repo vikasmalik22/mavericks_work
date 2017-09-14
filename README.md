@@ -1,17 +1,19 @@
 # **Finding Lane Lines on the Road** 
 
-## Writeup Template
+[image1]: ./test_images_output/solidWhiteCurve.jpg "Lane Lines"
 
-### You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Finding Lane Lines on the Road**
+For Finding Lane Lines on the Road, I used OpenCV and Python
 
 The goals / steps of this project are the following:
 * Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
+* Pipeline used the following techniques
+1. Color Conversion
+2. Canny Edge Detection
+3. Blurring Images
+4. Region of Interest Detection
+5. Hough Transformation for Line Detection
 
+Using the pipeline we can find the lane lines on both individual images and video clip.
 
 [//]: # (Image References)
 
