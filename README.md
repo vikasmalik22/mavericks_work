@@ -94,50 +94,126 @@ We want two lane lines: one for the left and the other for the right. The left l
 Y-coordinate is reversed in the image. The higher value of y is actually lower in the image. 
 Therefore, the slope is negative for the left lane, and the slope is positive for the right lane.
 
-def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
-    """
-    NOTE: this is the function you might want to use as a starting point once you want to 
-    average/extrapolate the line segments you detect to map out the full
-    extent of the lane (going from the result shown in raw-lines-example.mp4
-    to that shown in P1_example.mp4).  
-    
-    Think about things like separating line segments by their 
-    slope ((y2-y1)/(x2-x1)) to decide which segments are part of the left
-    line vs. the right line.  Then, you can average the position of each of 
-    the lines and extrapolate to the top and bottom of the lane.
-    
-    This function draws `lines` with `color` and `thickness`.    
-    Lines are drawn on the image inplace (mutates the image).
-    If you want to make the lines semi-transparent, think about combining
-    this function with the weighted_img() function below
-    """
-    slope_thresh = 0.4
-    lines_left = []
-    lines_right = []
-    for line in lines:
-        for x1,y1,x2,y2 in line:
-            if((x2 - x1) != 0):
-                slope = (y2 - y1)/(x2 - x1)
-                if(abs(slope) >= slope_thresh):
-                    if(slope > 0):
-                        lines_right.append(line)
-                    else:
-                        lines_left.append(line)
+I have chosen a minimum threshold value of the slope to be identified as lines in and it is 0.4 (slope_thresh).
 
-    lines_leftright = [lines_left, lines_right]
+```
+slope_thresh = 0.4
+lines_left = []
+lines_right = []
+for line in lines:
+    for x1,y1,x2,y2 in line:
+        if((x2 - x1) != 0):
+            slope = (y2 - y1)/(x2 - x1)
+            if(abs(slope) >= slope_thresh):
+                if(slope > 0):
+                    lines_right.append(line)
+                else:
+                    lines_left.append(line)
+
+lines_leftright = [lines_left, lines_right]
+
+```
+
+Once we get the left and right lanes we get the coeffecients m and b of the line (y = mx + b) using np.polyfit function and 1st degree polynominal equation of the line using  np.poly1d.
+
+These two helps us in getting the various x and y co-ordinates on the left and right lane lines. 
+
+```
+for a in range(0, 2):
+        x = []
+        y = []
+        for line in lines_leftright[a]:
+            for x1, y1, x2, y2 in line:
+                x += [x1, x2]
+                y += [y1, y2]
+
+        #Get coeficients for y = mx + b
+        z = np.polyfit(x, y, 1)
+        f = np.poly1d(z)
+
+        x_pts=[]
+        y_pts=[]
+```
+
+###Extrapolation
+
+Then to extrapolate the lines properly for left line we need to choose a minimum value to make sure it touches the bottom of the image. So we choose minimum of x for left lane line as 0. 
+
+Also, we don't choose any points which are higher than the top line of the masked area (in this case it is 320). 
+
+
+
+
+```
+		if(a == 0):
+            minx = 0 # For Left Lines consider minimum = 0
+        else:
+            minx = min(x) # For right lines ignore min = 0
+
+        for i in range(minx, max(x)):
+            if(f(i) >= 320):
+                x_pts += [int(i)]
+                y_pts += [int(f(i))]
+```
+
+For the right lane line we need to check if there is a point touching bottom of the image. If not then we find a x-coordinate using equation 
+x = (y - c )/ m. y = 540 (bottom of image) and then append them.
+
+```
+		#if there is no y-axis point which exists
+        #which is touching the bottom of image (i.e height)
+        #then find a point on the line which tocuhes the bottom 
+        if(np.amax(y_pts) < 540):
+            #x = (y - c )/ m
+            x = (540 - z[1]) / z[0]
+            x_pts +=[int(x)]
+            y_pts +=[540]
+```
+
+Lastly we pack all the points together and draw the lines for the lanes.
+
+```
+		#pack all the points together
+        points = list(zip(x_pts, y_pts))
+        
+        #iterate through all the points and create a line
+        #connecting to them
+        for i in range(1, len(points)):
+            px, py = points[i-1]
+            cx, cy = points[i]
+            cv2.line(img, (int(px), int(py)), (int(cx), int(cy)), color, thickness)
+
+```
+The images are taken from test_images folder and output is stored in test_images_output folder. Below is the final output we get.
 
 <img src="WriteupImages/Avg_Extrapolated.jpg" alt="Average & Extrapolated Image" />
 
+For the Video Clips the same pipeline when used creates the output Video Clips in 
+test_videos_output folder.
+
+```
+def process_image(image):
+    result = pipeline(image)
+    return result
+    
+directory = "test_videos_output"
+if not os.path.exists(directory):
+    os.makedirs(directory)
+    
+white_output = 'test_videos_output/solidWhiteRight.mp4'
+clip1 = VideoFileClip("test_videos/solidWhiteRight.mp4")
+white_clip = clip1.fl_image(process_image)
+%time white_clip.write_videofile(white_output, audio=False)
+```
+
 ### 2. Identify potential shortcomings with your current pipeline
 
+One potential shortcoming is it's only able to detect straight lane lines. It won't be able to handle the curved lanes. 
 
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
-
+Other shortcoming is it won't be able to detect steep lane lines since our Region of Interest is mostly in the middle part of the image.
 
 ### 3. Suggest possible improvements to your pipeline
 
-A possible improvement would be to ...
+A possible improvement would be to identify the steep and curved lane lines. We would need to detect the lane lines with some height logic connected to straight lines. 
 
-Another potential improvement could be to ...
+For Curved lane lines, we would need to consider perspective transformation to handle it. 
