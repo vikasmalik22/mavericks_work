@@ -38,7 +38,7 @@ This is because the Canny edge detection measures the magnitude of pixel intensi
 def grayscale(img):
     return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
+<img src="WriteupImages/Grayscale.jpg" alt="Gray Image" />
 
 ### Step 2. Gaussian smoothing
 
@@ -46,8 +46,8 @@ Gaussian smoothing, before running Canny, which is essentially a way of suppress
 
 def gaussian_blur(img, kernel_size)
 
-<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
-	
+<img src="WriteupImages/Gaussian_Blur.jpg" alt="Gaussian Blur Image" />
+
 ### Step 3. Canny Edge Detection
 
 Canny Edge Algorithm helps in detecting edges in an image.
@@ -56,8 +56,8 @@ The algorithm will first detect strong edge (strong gradient) pixels above the h
 
 def canny(img, low_threshold, high_threshold)
 	
-<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
-	
+<img src="WriteupImages/Canny_Edge.jpg" alt="Canny Edge Image" />
+
 ### Step 4. Region of Interest 
 
 When we are finding lane lines, we don't need to check all the details in the image.
@@ -68,7 +68,7 @@ We use masking to include only our area of interest where we can detect lane lin
 
 def region_of_interest(img, vertices)
 
-<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
+<img src="WriteupImages/ROI.jpg" alt="Masked Image" />
 
 ### Step 5. Hough Transformation for Line Detection
 
@@ -82,7 +82,7 @@ threshold: Accumulator threshold parameter. Only those lines are returned that g
 minLineLength: Minimum line length. Line segments shorter than that are rejected.
 maxLineGap: Maximum allowed gap between points on the same line to link them.
 
-<img src="test_images/solidWhiteCurve.jpg" alt="Test Image" />
+<img src="WriteupImages/Hough_Weighted.jpg" alt="Hough Weighted Image" />
 
 ## Averaging and Extrapolating Lines
 
@@ -125,6 +125,8 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=2):
                         lines_left.append(line)
 
     lines_leftright = [lines_left, lines_right]
+
+<img src="WriteupImages/Avg_Extrapolated.jpg" alt="Average & Extrapolated Image" />
 
 ### 2. Identify potential shortcomings with your current pipeline
 
